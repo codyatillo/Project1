@@ -171,10 +171,11 @@ public class CustomerDaoImp implements CustomerDao {
                         System.out.println("Check or Accept accounts based off customers ID");
                         System.out.println("1. Accept Account");
                         System.out.println("2. Reject Account");
+                        System.out.println("3. Return to menu");
                         System.out.println("Select an option: ");
                         select = scanner.nextInt();
 
-                        while(select > 2 || select <1){
+                        while(select > 3 || select <1){
                             System.out.println("Enter a valid option");
                             select = sc.nextInt();
                         }
@@ -205,7 +206,12 @@ public class CustomerDaoImp implements CustomerDao {
                             } else {
                                 System.out.println("Oops!, something went wrong");
                             }
+                        }else if (select == 3)
+                        {
+                            System.out.println("back to menu");
                         }
+
+
                             break;
 
                     case 2:
@@ -357,6 +363,8 @@ public class CustomerDaoImp implements CustomerDao {
         return allEmp;
     }
 
+
+
     @Override
     public void createAccount() throws SQLException {
         CustomerDao dao = CustomerDaoFactory.getCustomerDao();
@@ -396,7 +404,7 @@ public class CustomerDaoImp implements CustomerDao {
 
             while (balance1 < 0) {
                 System.out.println("Cannot have a negative balance input new balance: ");
-                sc.nextDouble();
+                balance1 = sc.nextDouble();
             }
 
         //End login creation
@@ -417,15 +425,12 @@ public class CustomerDaoImp implements CustomerDao {
 
         List<showCustomer> allEmp = new ArrayList<showCustomer>();
 
-
         //create table custom (userN char(50), pass char(50),
         // id integer NOT NULL AUTO_INCREMENT, name char(50), balance double, isVerified boolean not null default 0,
         //Primary key(id));
         while (result.next()) {
-
             String name = result.getString("name");
             double balance = result.getDouble("balance");
-
 
             allEmp.add(new showCustomer(name, balance));
         }
