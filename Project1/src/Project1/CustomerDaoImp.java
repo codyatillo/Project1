@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
+
 
 public class CustomerDaoImp implements CustomerDao {
 
@@ -15,14 +17,12 @@ public class CustomerDaoImp implements CustomerDao {
         this.connection = ConnectionFactory.getConnection();
     }
 
-
     @Override
     public void addCustomer(preCustomer customer) throws SQLException {
         String sql = "insert into customer (users_name, users_password, name, balance) values (?, ?, ?, ?)";
         //switch this up to where you insert values
         //inputs variables from preCustomer class
         // insert into customer(users_name, users_password, name, balance) values ('cody1', 'atillo1', 'cody atillo', 0);
-
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, customer.getUsers_name());
         preparedStatement.setString(2, customer.getUsers_password());
@@ -35,7 +35,6 @@ public class CustomerDaoImp implements CustomerDao {
             System.out.println("Oops!, something went wrong");
         }
     }
-
 
     @Override
     public void withdrawFunds() throws SQLException {
@@ -149,11 +148,8 @@ public class CustomerDaoImp implements CustomerDao {
         while (rs.next()) {
             databaseUsername = rs.getString("users_name");
             databasePassword = rs.getString("users_password");
-
         }
 
-
-        // Boolean databaseFalseEmp;
         if (name.equals(databaseUsername) && password.equals(databasePassword)) {
             System.out.println();
             System.out.println("Successful Login!\n----");
@@ -161,71 +157,79 @@ public class CustomerDaoImp implements CustomerDao {
             //employee can approve or reject an account
             //employee can view bank accounts
             //throw into loop to make cleaner
-            System.out.println("1. Approve or Rejected Account"); //working with integers will be easier
-            System.out.println("2. View Bank Account records");   //this is just gonna be a show all
-            System.out.println("3. Logout");                      //exit employee mode back to login
-            //employee can also log all of the transactions
-            System.out.println();
-            System.out.println("Enter Menu Selection");
-            int EmployeeSelection = sc.nextInt();
+                int selection = 5;
+            do {
+                switch (selection) {
 
-            while(EmployeeSelection < 1 || EmployeeSelection > 4){
-                System.out.println("Invalid input select operation between 1 - 4");
-                EmployeeSelection = sc.nextInt();
-            }
-            if(EmployeeSelection == 1){ //Approve or reject account
-                Scanner scanner = new Scanner(System.in);
+                    case 1://employee login
+                     //Approve or reject account
+                        Scanner scanner = new Scanner(System.in);
 
-                int select;
-                dao.getCustomer();
+                        int select;
+                        dao.getCustomer();
+                        System.out.println();
+                        System.out.println("Check or Accept accounts based off customers ID");
+                        System.out.println("1. Accept Account");
+                        System.out.println("2. Reject Account");
+                        System.out.println("Select an option: ");
+                        select = scanner.nextInt();
+
+                        while(select > 2 || select <1){
+                            System.out.println("Enter a valid option");
+                            select = sc.nextInt();
+                        }
+
+                        if (select == 1){
+                            System.out.println("Account number you wish to Accept");
+
+                            int acceptID;
+                            acceptID = scanner.nextInt();
+                            String sql = "UPDATE customer Set isVeri = true Where id = " + acceptID ;
+                            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                            int count = preparedStatement.executeUpdate();
+                            if (count > 0) {
+                                System.out.println("Account Updated ~ Approved");
+                            } else {
+                                System.out.println("Oops!, something went wrong");
+                            }
+                        }else if(select == 2){
+                            System.out.println("Account number you wish to Reject");
+
+                            int acceptID;
+                            acceptID = scanner.nextInt();
+                            String sql2 = "UPDATE customer Set isVeri = false Where id = " + acceptID ;
+                            PreparedStatement preparedStatement = connection.prepareStatement(sql2);
+                            int count = preparedStatement.executeUpdate();
+                            if (count > 0) {
+                                System.out.println("Account Updated ~ Rejected");
+                            } else {
+                                System.out.println("Oops!, something went wrong");
+                            }
+                        }
+                            break;
+
+                    case 2:
+
+                      dao.getCustomer();
+                        break;
+
+                    case 3: //Create Account
+                        exit(0);
+
+                    default:
+                        System.out.println("Enter a valid Option");
+                }// End of switch statement
                 System.out.println();
-                System.out.println("Check or Accept accounts based off customers ID");
-                System.out.println("1. Accept Account");
-                System.out.println("2. Reject Account");
-                select = scanner.nextInt();
+                System.out.println("1. Approve or Rejected Account"); //working with integers will be easier
+                System.out.println("2. View Bank Account records");   //this is just gonna be a show all
+                System.out.println("3. Logout");                      //exit employee mode back to login
+                System.out.println();
+                System.out.println("Enter Menu Selection");
 
-                while(select > 2 || select <1){
-                    System.out.println("Enter a valid option");
-                    select = sc.nextInt();
-                }
+                selection = sc.nextInt();
+            } while (selection != 3);
 
-                if (select == 1){
-                    System.out.println("Account number you wish to Accept");
-
-                    int acceptID;
-                    acceptID = scanner.nextInt();
-                    String sql = "UPDATE customer Set isVeri = true Where id = " + acceptID ;
-                    PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                    int count = preparedStatement.executeUpdate();
-                    if (count > 0) {
-                        System.out.println("Account Updated ~ Approved");
-                    } else {
-                        System.out.println("Oops!, something went wrong");
-                    }
-                }else if(select == 2){
-                    System.out.println("Account number you wish to Reject");
-
-                    int acceptID;
-                    acceptID = scanner.nextInt();
-                    String sql2 = "UPDATE customer Set isVeri = false Where id = " + acceptID ;
-                    PreparedStatement preparedStatement = connection.prepareStatement(sql2);
-                    int count = preparedStatement.executeUpdate();
-                    if (count > 0) {
-                        System.out.println("Account Updated ~ Rejected");
-                    } else {
-                        System.out.println("Oops!, something went wrong");
-                    }
-                }
-            }
-            else if(EmployeeSelection == 2) //Show the list of Customers
-            {
-                dao.getCustomer();
-            }
-            else if (EmployeeSelection == 3){
-                return;
-            }
-
-        }
+        } // end of inital if
         else {
             System.out.println("Login Failed Not an Employee Account\n----");
         }
@@ -238,7 +242,6 @@ public class CustomerDaoImp implements CustomerDao {
 
         String databaseUsername = " ";
         String databasePassword = " ";
-        boolean isVeri = true;
         CustomerDao dao = CustomerDaoFactory.getCustomerDao();
 
         // Check Username and Password
@@ -283,34 +286,37 @@ public class CustomerDaoImp implements CustomerDao {
             else{
                 System.out.println("Account is Verified ");
                 System.out.println();
-                System.out.println("1. Withdraw"); // take away from balance //update checks
-                System.out.println("2. Deposit"); // add too balance //Fine add loop
-                System.out.println("3. Post Money Transfer"); //by customer id be able to send money given the account number
-                // can post money transfers
-                System.out.println("4. Logout");    //exit program
-                System.out.println();
-                System.out.println("Enter Menu Selection: ");
-                int CustomerSelection = sc.nextInt();
-                while(CustomerSelection < 1 || CustomerSelection > 4){
-                    System.out.println("Invalid input select operation between 1 - 4");
-                    CustomerSelection = sc.nextInt();
-                }
-                if(CustomerSelection == 1){
-                    dao.withdrawFunds();//finished just set limits
-                }
-                else if(CustomerSelection == 2) //finished
-                {
-                    dao.depositFunds();
-                }
-                else if (CustomerSelection == 3)
-                {
-                    dao.moneyTransfer();
+                //
+                    int choice = 6;
+                do {
+                    switch (choice) {
 
-                }
-                else if (CustomerSelection == 4)
-                {
-                    return;
-                }
+                        case 1://employee login
+                           dao.withdrawFunds();
+                            break;
+                        case 2://Customer login
+                            dao.depositFunds();
+                            break;
+                        case 3: //Create Account
+                            dao.moneyTransfer();
+                            break;
+                        case 4:
+                            exit(0);
+
+                        default:
+                            System.out.println("Enter a valid Option");
+                    }// End of switch statement
+                    System.out.println();
+                    System.out.println("1. Withdraw"); // take away from balance //update checks
+                    System.out.println("2. Deposit"); // add too balance //Fine add loop
+                    System.out.println("3. Post Money Transfer"); //by customer id be able to send money given the account number
+                    // can post money transfers
+                    System.out.println("4. Logout");    //exit program
+                    System.out.println();
+                    System.out.println("Select a menu option: ");
+
+                    choice = sc.nextInt();
+                } while (choice != 4);
             }
     }
         else

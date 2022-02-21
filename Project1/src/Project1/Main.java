@@ -3,7 +3,6 @@ package Project1;
 import java.util.Scanner;
 import java.sql.SQLException;
 
-
 public class Main {
 
     public static void main(String[] args) throws SQLException{
@@ -23,7 +22,6 @@ public class Main {
                 case 3: //Create Account
                    dao.createAccount();
                     break;
-
                 case 4:
                     exit(0);
                 default:
@@ -33,20 +31,16 @@ public class Main {
             System.out.println("Banking Application: Select an option");
             System.out.println("1. Employee Login");
             System.out.println("2. Customer Login");
-            System.out.println("3. Create Account");  // username, Password, ID, name, email, balance (dont need email)
+            System.out.println("3. Create Account");  // username, Password, ID, name, balance, isVeri
             System.out.println("4. Exit");
             System.out.println();
             System.out.println("Select a menu option: ");
             Scanner sc = new Scanner(System.in);
             choice = sc.nextInt();
-        } while (choice != 4);    // <--- changed
-    }
+        } while (choice != 4);// <--- changed
 
+        System.out.println("Thank You for banking with us!");
+    }
     private static void exit(int i) {
     }
-
 }
-
-
-
-
