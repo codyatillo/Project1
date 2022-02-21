@@ -76,7 +76,7 @@ public class CustomerDaoImp implements CustomerDao {
             depositAmu = sc.nextDouble();
         }
 
-        System.out.println("Enter ID: ");
+        System.out.println("Enter Account ID: ");
         int id = sc.nextInt();
 
         String SQL = "update customer SET balance = balance + " + depositAmu + " WHERE id = " + id + ";";
@@ -437,8 +437,4 @@ public class CustomerDaoImp implements CustomerDao {
         allEmp.forEach(System.out::println);
         return allEmp;
     }
-
-
-
-
 }
