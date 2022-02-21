@@ -13,6 +13,7 @@ public interface CustomerDao {
     void createAccount() throws SQLException;
     //will show all the customers an Employee function
     List<Customer> getCustomer() throws SQLException;
+    List<showCustomer> getSpecific() throws SQLException;
 
 }
 

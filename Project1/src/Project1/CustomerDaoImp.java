@@ -301,6 +301,9 @@ public class CustomerDaoImp implements CustomerDao {
                             dao.moneyTransfer();
                             break;
                         case 4:
+                            dao.getSpecific();
+                            break;
+                        case 5:
                             exit(0);
 
                         default:
@@ -310,13 +313,14 @@ public class CustomerDaoImp implements CustomerDao {
                     System.out.println("1. Withdraw"); // take away from balance //update checks
                     System.out.println("2. Deposit"); // add too balance //Fine add loop
                     System.out.println("3. Post Money Transfer"); //by customer id be able to send money given the account number
+                    System.out.println("4. Specific Account Details");
                     // can post money transfers
-                    System.out.println("4. Logout");    //exit program
+                    System.out.println("5. Logout");    //exit program
                     System.out.println();
                     System.out.println("Select a menu option: ");
 
                     choice = sc.nextInt();
-                } while (choice != 4);
+                } while (choice != 5);
             }
     }
         else
@@ -402,4 +406,34 @@ public class CustomerDaoImp implements CustomerDao {
         }
 
 
+    @Override
+    public List<showCustomer> getSpecific() throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter ID for account details");
+        int specificID = sc.nextInt();
+        String sql = "select * from customer Where id = " + specificID;
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(sql);
+
+        List<showCustomer> allEmp = new ArrayList<showCustomer>();
+
+
+        //create table custom (userN char(50), pass char(50),
+        // id integer NOT NULL AUTO_INCREMENT, name char(50), balance double, isVerified boolean not null default 0,
+        //Primary key(id));
+        while (result.next()) {
+
+            String name = result.getString("name");
+            double balance = result.getDouble("balance");
+
+
+            allEmp.add(new showCustomer(name, balance));
+        }
+        allEmp.forEach(System.out::println);
+        return allEmp;
     }
+
+
+
+
+}
